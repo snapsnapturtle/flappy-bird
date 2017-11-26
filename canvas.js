@@ -14,9 +14,8 @@ class GameArea {
         this.gameInterval = null;
         this.liftVelocity = 17;
 
-        this.imageHandler = new ImageHandler();
-
-        this.imageHandler.fetchImages().then(() => {
+        this.imageHandler = new ImageHandler(dataSetClassic);
+        this.imageHandler.fetchImage().then(() => {
             this.isLoading = false;
 
             this.character = new Character(this.imageHandler, gameWidth / 3, (gameHeight / 2) - this.liftVelocity);
@@ -28,6 +27,7 @@ class GameArea {
 
             document.getElementById('game').appendChild(this.canvas);
         });
+
     }
 
     start () {
@@ -55,7 +55,17 @@ class GameArea {
         this.clear();
 
         const background = this.imageHandler.getImage('background');
-        this.context.drawImage(background, 0, 0, this.canvas.width, this.canvas.height - 20);
+        this.context.drawImage(
+            background.imageElement,
+            background.sourceX,
+            background.sourceY,
+            background.sourceWidth,
+            background.sourceHeight,
+            0,
+            0,
+            this.canvas.width,
+            this.canvas.height - 20,
+        );
 
         if (!noUpdate) {
             this.ground.update();
@@ -137,10 +147,32 @@ class Tube {
     draw (context) {
         const tubeImageBottom = this.imageHandler.getImage('pipe');
         const tubeImageTop = this.imageHandler.getImage('pipe-rev');
-        const calculatedTubeImageHeight = tubeImageBottom.height / (tubeImageBottom.width / this.width);
 
-        context.drawImage(tubeImageTop, this.x, 0 - calculatedTubeImageHeight + this.topTubeHeight, this.width, calculatedTubeImageHeight);
-        context.drawImage(tubeImageBottom, this.x, this.canvasHeight - this.bottomTubeHeight, this.width, calculatedTubeImageHeight);
+        const calculatedTubeImageHeight = tubeImageBottom.sourceHeight / (tubeImageBottom.sourceWidth / this.width);
+
+        context.drawImage(
+            tubeImageTop.imageElement,
+            tubeImageTop.sourceX,
+            tubeImageTop.sourceY,
+            tubeImageTop.sourceWidth,
+            tubeImageTop.sourceHeight,
+            this.x,
+            0 - calculatedTubeImageHeight + this.topTubeHeight,
+            this.width,
+            calculatedTubeImageHeight,
+        );
+
+        context.drawImage(
+            tubeImageBottom.imageElement,
+            tubeImageBottom.sourceX,
+            tubeImageBottom.sourceY,
+            tubeImageBottom.sourceWidth,
+            tubeImageBottom.sourceHeight,
+            this.x,
+            this.canvasHeight - this.bottomTubeHeight,
+            this.width,
+            calculatedTubeImageHeight,
+        );
     }
 
     update () {
@@ -205,19 +237,30 @@ class Ground {
     }
 
     draw (context) {
-        for (let i = -this.canvasWidth / 2; i <= this.canvasWidth * 2; i += this.groundImage.width / 2) {
+        for (let i = (this.canvasWidth / 2) * -1; i <= this.canvasWidth + (2 * this.groundImage.sourceWidth); i += this.groundImage.sourceWidth) {
             context.save();
-            context.drawImage(this.groundImage, i - this.currentOffset, this.canvasHeight - this.groundImage.height / 2 + 20, this.groundImage.width / 2, this.groundImage.height / 2);
+            context.drawImage(
+                this.groundImage.imageElement,
+                this.groundImage.sourceX,
+                this.groundImage.sourceY,
+                this.groundImage.sourceWidth,
+                this.groundImage.sourceHeight,
+                i - this.currentOffset,
+                this.canvasHeight - this.groundImage.sourceHeight / 2 + 20,
+                this.groundImage.sourceWidth,
+                this.groundImage.sourceHeight / 2,
+            );
+
             context.restore();
         }
     }
 
     update () {
-        if (this.currentOffset >= this.groundImage.width / 2) {
-            this.currentOffset = 0;
-        }
-
         this.currentOffset += this.moveSpeed;
+
+        if (this.currentOffset >= this.groundImage.sourceWidth) {
+            this.currentOffset = this.currentOffset - this.groundImage.sourceWidth;
+        }
     }
 }
 
@@ -238,7 +281,18 @@ class Character {
     }
 
     draw (context) {
-        context.drawImage(this.imageHandler.getImage('bird'), this.x - 2, this.y - 2, this.width + 2, this.height + 2);
+        const bird = this.imageHandler.getImage('bird');
+        context.drawImage(
+            bird.imageElement,
+            bird.sourceX,
+            bird.sourceY,
+            bird.sourceWidth,
+            bird.sourceHeight,
+            this.x - 2,
+            this.y - 2,
+            this.width + 2,
+            this.height + 2,
+        );
     }
 
     isOffScreen (screenHeight) {
@@ -247,38 +301,38 @@ class Character {
 }
 
 class ImageHandler {
-    constructor () {
-        this.images = {
-            'background': 'images/background.png',
-            'bird': 'images/bird.png',
-            'ground': 'images/ground.png',
-            'pipe': 'images/pipe.png',
-            'pipe-rev': 'images/pipe-rev.png',
+    constructor (dataSet) {
+        this.data = dataSet;
+    }
+
+    fetchImage () {
+        return new Promise(resolve => {
+            const image = new Image();
+            image.onload = resolve;
+            image.src = this.data.spriteUrl;
+            this.spriteImage = image;
+        });
+    }
+
+    getImage (identifier) {
+        return {
+            imageElement: this.spriteImage,
+            sourceX: this.data.images[ identifier ][ 0 ],
+            sourceY: this.data.images[ identifier ][ 1 ],
+            sourceWidth: this.data.images[ identifier ][ 2 ],
+            sourceHeight: this.data.images[ identifier ][ 3 ],
         };
     }
-
-    getImage (key) {
-        return this.images[ key ];
-    }
-
-    fetchImages () {
-        const imagePromises = [];
-
-        for (const imageKey in this.images) {
-            if (this.images.hasOwnProperty(imageKey)) {
-                imagePromises.push(new Promise((resolve) => {
-                    const image = new Image();
-
-                    image.onload = () => {
-                        this.images[ imageKey ] = image;
-                        resolve(image);
-                    };
-
-                    image.src = this.images[ imageKey ];
-                }));
-            }
-        }
-
-        return Promise.all(imagePromises);
-    }
 }
+
+const dataSetClassic = {
+    spriteUrl: 'images/classic-sprite.png',
+    images: {
+        background: [ 0, 0, 768, 896 ],
+        bird: [ 276, 896, 90, 64 ],
+        ground: [ 366, 896, 37, 128 ],
+        pipe: [ 138, 896, 138, 793 ],
+        'pipe-rev': [ 0, 896, 138, 793 ],
+    },
+};
+//138px -896px; width: 138px; height: 793px;
