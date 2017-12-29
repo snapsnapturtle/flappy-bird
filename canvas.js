@@ -37,7 +37,7 @@ class GameArea {
             return;
         }
 
-        this.gameInterval = setInterval(() => this.updateGame(), 20);
+        this.gameInterval = setInterval(() => this.updateGame(), 15);
     }
 
     stopGame (message) {
@@ -335,4 +335,3 @@ const dataSetClassic = {
         'pipe-rev': [ 0, 896, 138, 793 ],
     },
 };
-//138px -896px; width: 138px; height: 793px;
