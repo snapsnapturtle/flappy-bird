@@ -1,0 +1,32 @@
+{
+    "name": "flappy-bird",
+    "version": "1.0.0",
+    "description": "a little browser game created in a few hours on a sunday afternoon",
+    "source": "src/index.html",
+    "browserslist": "> 0.5%, last 2 versions, not dead",
+    "scripts": {
+        "start": "parcel",
+        "build": "parcel build",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "prepare": "husky install"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/snapsnapturtle/flappy-bird.git"
+    },
+    "author": "",
+    "bugs": {
+        "url": "https://github.com/snapsnapturtle/flappy-bird/issues"
+    },
+    "homepage": "https://github.com/snapsnapturtle/flappy-bird#readme",
+    "lint-staged": {
+        "**/*": "prettier --write --ignore-unknown"
+    },
+    "devDependencies": {
+        "husky": "^8.0.1",
+        "lint-staged": "^13.0.3",
+        "parcel": "^2.7.0",
+        "parcel-reporter-static-files-copy": "^1.4.0",
+        "prettier": "^2.7.1"
+    }
+}

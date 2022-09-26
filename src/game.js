@@ -1,5 +1,5 @@
 class GameArea {
-    constructor () {
+    constructor() {
         const gameWidth = 450;
         const gameHeight = 600;
 
@@ -18,7 +18,7 @@ class GameArea {
         this.imageHandler.fetchImage().then(() => {
             this.isLoading = false;
 
-            this.character = new Character(this.imageHandler, gameWidth / 3, (gameHeight / 2) - this.liftVelocity);
+            this.character = new Character(this.imageHandler, gameWidth / 3, gameHeight / 2 - this.liftVelocity);
             this.ground = new Ground(this.imageHandler, this.canvas.width, this.canvas.height);
             this.tubes = [];
 
@@ -27,10 +27,9 @@ class GameArea {
 
             document.getElementById('game').appendChild(this.canvas);
         });
-
     }
 
-    start () {
+    start() {
         if (this.isLoading) {
             console.warn('game files are still loading');
 
@@ -40,7 +39,7 @@ class GameArea {
         this.gameInterval = setInterval(() => this.updateGame(), 15);
     }
 
-    stopGame (message) {
+    stopGame(message) {
         clearInterval(this.gameInterval);
 
         if (message) {
@@ -50,7 +49,7 @@ class GameArea {
         }
     }
 
-    updateGame (noUpdate) {
+    updateGame(noUpdate) {
         this.frameNumber++;
         this.clear();
 
@@ -64,7 +63,7 @@ class GameArea {
             0,
             0,
             this.canvas.width,
-            this.canvas.height - 20,
+            this.canvas.height - 20
         );
 
         if (!noUpdate) {
@@ -102,7 +101,7 @@ class GameArea {
         this.character.draw(this.context);
     }
 
-    changeCharacterVelocity () {
+    changeCharacterVelocity() {
         if (this.gameInterval === null) {
             this.start();
         }
@@ -110,16 +109,16 @@ class GameArea {
         this.character.velocity = this.liftVelocity;
     }
 
-    clear () {
+    clear() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    addEventListeners () {
+    addEventListeners() {
         this.canvas.addEventListener('mousedown', () => {
             this.changeCharacterVelocity();
         });
 
-        window.addEventListener('keydown', (event) => {
+        window.addEventListener('keydown', event => {
             if (event.keyCode === 32) {
                 this.changeCharacterVelocity();
             }
@@ -128,7 +127,7 @@ class GameArea {
 }
 
 class Tube {
-    constructor (imageHandler, canvasHeight, canvasWidth) {
+    constructor(imageHandler, canvasHeight, canvasWidth) {
         this.width = 100;
         this.moveSpeed = 3;
         this.minHeight = 50;
@@ -140,11 +139,11 @@ class Tube {
 
         const tubeHeights = this.generateTubeHeights();
 
-        this.topTubeHeight = tubeHeights[ 0 ];
-        this.bottomTubeHeight = tubeHeights[ 1 ];
+        this.topTubeHeight = tubeHeights[0];
+        this.bottomTubeHeight = tubeHeights[1];
     }
 
-    draw (context) {
+    draw(context) {
         const tubeImageBottom = this.imageHandler.getImage('pipe');
         const tubeImageTop = this.imageHandler.getImage('pipe-rev');
 
@@ -159,7 +158,7 @@ class Tube {
             this.x,
             0 - calculatedTubeImageHeight + this.topTubeHeight,
             this.width,
-            calculatedTubeImageHeight,
+            calculatedTubeImageHeight
         );
 
         context.drawImage(
@@ -171,63 +170,68 @@ class Tube {
             this.x,
             this.canvasHeight - this.bottomTubeHeight,
             this.width,
-            calculatedTubeImageHeight,
+            calculatedTubeImageHeight
         );
     }
 
-    update () {
+    update() {
         this.x -= this.moveSpeed;
-        if (this.x > ((this.canvasWidth / 3) - this.moveSpeed - (this.width / 2)) && this.x < ((this.canvasWidth / 3) - (this.width / 2))) {
+        if (
+            this.x > this.canvasWidth / 3 - this.moveSpeed - this.width / 2 &&
+            this.x < this.canvasWidth / 3 - this.width / 2
+        ) {
             window.dispatchEvent(new Event('score'));
         }
     }
 
-    isOffScreen () {
-        return (this.x + this.width) < 0;
+    isOffScreen() {
+        return this.x + this.width < 0;
     }
 
-    collidesWith (characterObject) {
+    collidesWith(characterObject) {
         const rectangleIntersect = (rectA, rectB) => {
-            return !(rectB.left > rectA.right ||
+            return !(
+                rectB.left > rectA.right ||
                 rectB.right < rectA.left ||
                 rectB.top > rectA.bottom ||
-                rectB.bottom < rectA.top);
+                rectB.bottom < rectA.top
+            );
         };
 
         const characterBox = {
             top: characterObject.y,
             left: characterObject.x,
             bottom: characterObject.y + characterObject.height,
-            right: characterObject.x + characterObject.width,
+            right: characterObject.x + characterObject.width
         };
 
         const topTubeBox = {
             top: 0,
             left: this.x,
             bottom: this.topTubeHeight,
-            right: this.x + this.width,
+            right: this.x + this.width
         };
 
         const bottomTubeBox = {
             top: this.canvasHeight - this.bottomTubeHeight,
             left: this.x,
             bottom: this.canvasHeight,
-            right: this.x + this.width,
+            right: this.x + this.width
         };
 
         return !!(rectangleIntersect(characterBox, topTubeBox) || rectangleIntersect(characterBox, bottomTubeBox));
     }
 
-    generateTubeHeights () {
+    generateTubeHeights() {
         const tubeAHeight = Math.floor(Math.random() * (this.canvasHeight / 2 - this.minHeight)) + this.minHeight;
-        const tubeBHeight = (this.canvasHeight - tubeAHeight - this.minSpace) - (Math.floor(Math.random() * this.minSpace));
+        const tubeBHeight = this.canvasHeight - tubeAHeight - this.minSpace - Math.floor(Math.random() * this.minSpace);
 
-        return [ tubeAHeight, tubeBHeight ];
+        return [tubeAHeight, tubeBHeight];
     }
 }
 
 class Ground {
-    constructor (imageHandler, canvasWidth, canvasHeight) {
+    constructor(imageHandler, canvasWidth, canvasHeight) {
         this.imageHandler = imageHandler;
         this.groundImage = this.imageHandler.getImage('ground');
         this.canvasWidth = canvasWidth;
@@ -236,8 +240,12 @@ class Ground {
         this.moveSpeed = 3;
     }
 
-    draw (context) {
-        for (let i = (this.canvasWidth / 2) * -1; i <= this.canvasWidth + (2 * this.groundImage.sourceWidth); i += this.groundImage.sourceWidth) {
+    draw(context) {
+        for (
+            let i = (this.canvasWidth / 2) * -1;
+            i <= this.canvasWidth + 2 * this.groundImage.sourceWidth;
+            i += this.groundImage.sourceWidth
+        ) {
             context.save();
             context.drawImage(
                 this.groundImage.imageElement,
@@ -248,14 +256,14 @@ class Ground {
                 i - this.currentOffset,
                 this.canvasHeight - this.groundImage.sourceHeight / 2 + 20,
                 this.groundImage.sourceWidth,
-                this.groundImage.sourceHeight / 2,
+                this.groundImage.sourceHeight / 2
             );
 
             context.restore();
         }
     }
 
-    update () {
+    update() {
         this.currentOffset += this.moveSpeed;
 
         if (this.currentOffset >= this.groundImage.sourceWidth) {
@@ -265,7 +273,7 @@ class Ground {
 }
 
 class Character {
-    constructor (imageHandler, startX, startY) {
+    constructor(imageHandler, startX, startY) {
         this.imageHandler = imageHandler;
         this.width = 50;
         this.height = 36;
@@ -275,12 +283,12 @@ class Character {
         this.y = startY;
     }
 
-    update () {
+    update() {
         this.velocity -= this.gravity;
         this.y -= this.velocity * 0.5;
     }
 
-    draw (context) {
+    draw(context) {
         const bird = this.imageHandler.getImage('bird');
         context.drawImage(
             bird.imageElement,
@@ -291,21 +299,21 @@ class Character {
             this.x - 2,
             this.y - 2,
             this.width + 2,
-            this.height + 2,
+            this.height + 2
         );
     }
 
-    isOffScreen (screenHeight) {
-        return this.y < 0 || (this.y + this.height) > screenHeight - 20;
+    isOffScreen(screenHeight) {
+        return this.y < 0 || this.y + this.height > screenHeight - 20;
     }
 }
 
 class ImageHandler {
-    constructor (dataSet) {
+    constructor(dataSet) {
         this.data = dataSet;
     }
 
-    fetchImage () {
+    fetchImage() {
         return new Promise(resolve => {
             const image = new Image();
             image.onload = resolve;
@@ -314,13 +322,13 @@ class ImageHandler {
         });
     }
 
-    getImage (identifier) {
+    getImage(identifier) {
         return {
             imageElement: this.spriteImage,
-            sourceX: this.data.images[ identifier ][ 0 ],
-            sourceY: this.data.images[ identifier ][ 1 ],
-            sourceWidth: this.data.images[ identifier ][ 2 ],
-            sourceHeight: this.data.images[ identifier ][ 3 ],
+            sourceX: this.data.images[identifier][0],
+            sourceY: this.data.images[identifier][1],
+            sourceWidth: this.data.images[identifier][2],
+            sourceHeight: this.data.images[identifier][3]
         };
     }
 }
@@ -328,10 +336,10 @@ class ImageHandler {
 const dataSetClassic = {
     spriteUrl: 'images/classic-sprite.png',
     images: {
-        background: [ 0, 0, 768, 896 ],
-        bird: [ 276, 896, 90, 64 ],
-        ground: [ 366, 896, 37, 128 ],
-        pipe: [ 138, 896, 138, 793 ],
-        'pipe-rev': [ 0, 896, 138, 793 ],
-    },
+        background: [0, 0, 768, 896],
+        bird: [276, 896, 90, 64],
+        ground: [366, 896, 37, 128],
+        pipe: [138, 896, 138, 793],
+        'pipe-rev': [0, 896, 138, 793]
+    }
 };
