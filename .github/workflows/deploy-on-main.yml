@@ -1,31 +1,19 @@
-name: Build & Deploy
+name: Deploy on main
+
 on:
     push:
         branches:
             - main
-    pull_request:
-        branches:
-            - '*'
+
 jobs:
     build:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v3
-
-            - name: Install dependencies
-              run: npm ci
-
-            - name: Lint files
-              run: npm run lint
-
-            - name: Build project
-              run: npm run build
+        uses: ./.github/workflows/build.yml
+        secrets: inherit
 
     deploy:
+        if: github.ref == 'refs/heads/main'
         needs: build
         runs-on: ubuntu-latest
-        if: github.ref == 'refs/heads/main'
         steps:
             - name: Checkout
               uses: actions/checkout@v3
