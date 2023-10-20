@@ -25,7 +25,7 @@
     },
     "devDependencies": {
         "husky": "^8.0.3",
-        "lint-staged": "^15.0.1",
+        "lint-staged": "^15.0.2",
         "parcel": "^2.10.0",
         "parcel-reporter-static-files-copy": "^1.5.3",
         "prettier": "^3.0.3"
