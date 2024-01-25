@@ -9,7 +9,7 @@
         "build": "rm -rf dist/ && parcel build --public-url ./",
         "lint": "npx prettier --check .",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "prepare": "husky install"
+        "prepare": "husky"
     },
     "repository": {
         "type": "git",
@@ -24,7 +24,7 @@
         "**/*": "prettier --write --ignore-unknown"
     },
     "devDependencies": {
-        "husky": "^8.0.3",
+        "husky": "^9.0.1",
         "lint-staged": "^15.2.0",
         "parcel": "^2.11.0",
         "parcel-reporter-static-files-copy": "^1.5.3",
