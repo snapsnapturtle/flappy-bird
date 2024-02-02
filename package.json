@@ -24,7 +24,7 @@
         "**/*": "prettier --write --ignore-unknown"
     },
     "devDependencies": {
-        "husky": "^9.0.7",
+        "husky": "^9.0.10",
         "lint-staged": "^15.2.1",
         "parcel": "^2.11.0",
         "parcel-reporter-static-files-copy": "^1.5.3",
