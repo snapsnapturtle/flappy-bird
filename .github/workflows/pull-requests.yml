@@ -6,6 +6,11 @@ on:
 permissions:
     contents: write
     pull-requests: write
+    # following permissions are required to add reviewer to PR
+    # https://github.com/cli/cli/issues/6274
+    statuses: read
+    checks: read
+    repository-projects: read
 
 jobs:
     build:
