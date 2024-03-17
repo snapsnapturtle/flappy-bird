@@ -92,7 +92,7 @@ class GameArea {
             }
 
             if (tube.collidesWith(this.character)) {
-                this.stopGame('you died.');
+                this.stopGame('Game over. Refresh to start again.');
             }
 
             tube.draw(this.context);
@@ -103,6 +103,7 @@ class GameArea {
 
     changeCharacterVelocity() {
         if (this.gameInterval === null) {
+            document.getElementById('score').textContent = '0';
             this.start();
         }
 
@@ -119,7 +120,7 @@ class GameArea {
         });
 
         window.addEventListener('keydown', event => {
-            if (event.keyCode === 32) {
+            if (event.code === 'Space' || event.keyCode === 1) {
                 this.changeCharacterVelocity();
             }
         });

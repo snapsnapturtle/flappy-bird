@@ -1,30 +1,17 @@
-<html>
+<html lang="en">
     <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta charset="UTF-8" />
         <title>Flappy Bird</title>
-        <style>
-            html,
-            body {
-                margin: 0;
-                padding: 0;
-                background: #171717;
-                font-family: monospace;
-            }
-
-            .sketch,
-            .page-title {
-                text-align: center;
-            }
-
-            .page-title {
-                color: #ececec;
-            }
-        </style>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="./index.css" type="text/css" rel="stylesheet" />
     </head>
-    <body style="user-select: none">
-        <h1 class="page-title"><span id="score">0</span></h1>
-        <div class="sketch" id="game"></div>
+    <body style="user-select: none" class="bg-gray-900">
+        <h1 id="score" class="text-center text-3xl font-mono text-white mt-12 mb-8">Press <kbd>SPACE</kbd> to start</h1>
+
+        <div class="flex place-content-center">
+            <span class="sketch" id="game"></span>
+        </div>
+
         <script src="./game.js"></script>
     </body>
 </html>
