@@ -3,14 +3,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta charset="UTF-8" />
         <title>Flappy Bird</title>
-        <script src="./game.js"></script>
         <style>
             html,
             body {
                 margin: 0;
                 padding: 0;
                 background: #171717;
-                font-family: sans-serif;
+                font-family: monospace;
             }
 
             .sketch,
@@ -23,19 +22,9 @@
             }
         </style>
     </head>
-    <body>
-        <br />
+    <body style="user-select: none">
         <h1 class="page-title"><span id="score">0</span></h1>
         <div class="sketch" id="game"></div>
-
-        <script>
-            new GameArea();
-
-            window.addEventListener('score', () => {
-                const element = document.getElementById('score');
-                const currentScore = element.textContent;
-                element.textContent = parseInt(currentScore) + 1;
-            });
-        </script>
+        <script src="./game.js"></script>
     </body>
 </html>

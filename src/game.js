@@ -77,7 +77,7 @@ class GameArea {
         }
 
         if (this.character.isOffScreen(this.canvas.height)) {
-            this.stopGame('you died.');
+            this.stopGame('The end');
         }
 
         this.tubes = this.tubes.filter(tube => !tube.isOffScreen());
@@ -343,3 +343,11 @@ const dataSetClassic = {
         'pipe-rev': [0, 896, 138, 793]
     }
 };
+
+new GameArea();
+
+window.addEventListener('score', () => {
+    const element = document.getElementById('score');
+    const currentScore = element.textContent;
+    element.textContent = (parseInt(currentScore) + 1).toString();
+});
