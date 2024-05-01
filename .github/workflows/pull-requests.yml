@@ -6,11 +6,6 @@ on:
 permissions:
     contents: write
     pull-requests: write
-    # following permissions are required to add reviewer to PR
-    # https://github.com/cli/cli/issues/6274
-    statuses: read
-    checks: read
-    repository-projects: read
 
 jobs:
     build:
@@ -29,12 +24,6 @@ jobs:
             - name: Merge non-major dependency updates
               if: ${{steps.metadata.outputs.update-type != 'version-update:semver-major'}}
               run: gh pr merge --auto --merge "$PR_URL"
-              env:
-                  PR_URL: ${{github.event.pull_request.html_url}}
-                  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-            - name: Request review for major dependency updates
-              if: ${{steps.metadata.outputs.update-type == 'version-update:semver-major'}}
-              run: gh pr edit "$PR_URL" --add-reviewer ${{ github.repository_owner }}
               env:
                   PR_URL: ${{github.event.pull_request.html_url}}
                   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

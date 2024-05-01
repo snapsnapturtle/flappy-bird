@@ -1,0 +1,21 @@
+name: Assign reviewer
+
+on:
+    pull_request:
+
+permissions:
+    contents: write
+    pull-requests: write
+    statuses: read
+    checks: read
+    repository-projects: read
+
+jobs:
+    assign-reviewer:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Assign repository owner as reviewer
+              run: gh pr edit "$PR_URL" --add-reviewer ${{ github.repository_owner }}
+              env:
+                  PR_URL: ${{github.event.pull_request.html_url}}
+                  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
