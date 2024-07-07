@@ -8,12 +8,12 @@ permissions:
     pull-requests: write
 
 jobs:
-    build:
-        uses: ./.github/workflows/build.yml
+    build-and-test:
+        uses: ./.github/workflows/build-and-test.yml
         secrets: inherit
     auto-merge:
         if: ${{ github.actor == 'dependabot[bot]' }}
-        needs: build
+        needs: build-and-test
         runs-on: ubuntu-latest
         steps:
             - name: Fetch dependabot metadata
