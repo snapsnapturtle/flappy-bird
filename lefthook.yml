@@ -1,0 +1,7 @@
+# Refer for explanation to following link:
+# https://evilmartians.github.io/lefthook/configuration/
+
+pre-commit:
+  commands:
+    auto-format:
+      run: npx lint-staged
