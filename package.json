@@ -23,7 +23,7 @@
         "**/*": "prettier --write --ignore-unknown"
     },
     "devDependencies": {
-        "lefthook": "^1.10.8",
+        "lefthook": "^1.10.9",
         "lint-staged": "^15.4.1",
         "parcel": "^2.13.3",
         "parcel-reporter-static-files-copy": "^1.5.3",
