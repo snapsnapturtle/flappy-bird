@@ -30,6 +30,6 @@
         "parcel-reporter-static-files-copy": "^1.5.3",
         "postcss": "^8.5.2",
         "prettier": "^3.5.1",
-        "tailwindcss": "^4.0.4"
+        "tailwindcss": "^4.0.7"
     }
 }
