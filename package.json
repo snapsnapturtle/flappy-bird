@@ -23,7 +23,7 @@
         "**/*": "prettier --write --ignore-unknown"
     },
     "devDependencies": {
-        "@tailwindcss/postcss": "^4.0.14",
+        "@tailwindcss/postcss": "^4.0.15",
         "lefthook": "^1.11.3",
         "lint-staged": "^15.5.0",
         "parcel": "^2.14.1",
