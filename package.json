@@ -26,7 +26,7 @@
         "@tailwindcss/postcss": "^4.0.15",
         "lefthook": "^1.11.3",
         "lint-staged": "^15.5.0",
-        "parcel": "^2.14.1",
+        "parcel": "^2.14.2",
         "parcel-reporter-static-files-copy": "^1.5.3",
         "postcss": "^8.5.3",
         "prettier": "^3.5.3",
