@@ -24,7 +24,7 @@
     },
     "devDependencies": {
         "@tailwindcss/postcss": "^4.0.15",
-        "lefthook": "^1.11.3",
+        "lefthook": "^1.11.4",
         "lint-staged": "^15.5.0",
         "parcel": "^2.14.2",
         "parcel-reporter-static-files-copy": "^1.5.3",
